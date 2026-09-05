@@ -14,8 +14,10 @@
   .tagline { font-size:clamp(22px,4vw,30px); font-weight:800; color:#fff; margin:36px 0 12px; }
   .accent { color:#a3e635; }
   .intro { color:#b9b9c4; max-width:760px; }
-  .hero { margin:28px 0; }
-  .hero img { width:100%; border-radius:12px; display:block; }
+  .hero { margin:28px 0; position:relative; }
+  .hero img { width:100%; border-radius:12px; display:block; opacity:0; transition:opacity .5s ease; position:relative; z-index:2; }
+  .hero img.ready { opacity:1; }
+  .hero .skeleton { border-radius:12px; }
   .section-title { font-size:20px; font-weight:800; color:#fff; border-left:4px solid #a3e635; padding-left:12px; margin:44px 0 20px; text-transform:uppercase; letter-spacing:2px; }
   .grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
   @media(max-width:700px){ .grid { grid-template-columns:1fr; } }
@@ -28,15 +30,36 @@
   .card h3 { color:#fff; font-size:18px; margin-bottom:12px; }
   .card ul { margin:12px 0 4px 18px; color:#b9b9c4; font-size:15px; }
   .card li { margin-bottom:6px; }
-  .slider { position:relative; overflow:hidden; border-radius:12px; margin-bottom:14px; background:#100f14; }
+
+  /* ═══ Слайдер ═══ */
+  .slider { position:relative; overflow:hidden; border-radius:12px; margin-bottom:14px; background:#100f14; touch-action:pan-y; }
   .slides { display:flex; transition:transform .45s ease; }
-  .slide { min-width:100%; }
-  .slide img { width:100%; display:block; }
-  .nav { position:absolute; top:50%; transform:translateY(-50%); background:rgba(23,22,27,.75); color:#a3e635; border:none; font-size:28px; width:44px; height:44px; border-radius:50%; cursor:pointer; line-height:1; }
+  .slide { min-width:100%; position:relative; }
+  .slide img { width:100%; display:block; -webkit-user-drag:none; user-select:none; }
+  .slide img.gifimg { position:relative; z-index:2; opacity:0; transition:opacity .5s ease; }
+  .slide img.gifimg.ready { opacity:1; }
+  .slide img.poster { position:absolute; inset:0; z-index:1; height:100%; object-fit:cover; filter:blur(18px) brightness(.9); transform:scale(1.06); opacity:0; transition:opacity .4s ease; }
+  .slide img.poster.ready { opacity:1; }
+  .skeleton { position:absolute; inset:0; z-index:0; min-height:220px; background:linear-gradient(100deg,#17161b 40%,#211f26 50%,#17161b 60%); background-size:200% 100%; animation:shimmer 1.4s infinite; }
+  @keyframes shimmer { to { background-position:-200% 0; } }
+  .nav { position:absolute; top:50%; transform:translateY(-50%); background:rgba(23,22,27,.75); color:#a3e635; border:none; font-size:28px; width:44px; height:44px; border-radius:50%; cursor:pointer; line-height:1; z-index:6; }
   .nav:hover { background:rgba(23,22,27,.95); }
   .prev { left:10px; } .next { right:10px; }
-  .counter { position:absolute; bottom:10px; right:12px; background:rgba(23,22,27,.85); color:#fff; font-size:12px; padding:4px 10px; border-radius:20px; }
+  @media (hover:none) { .nav { display:none; } }
+  .dots { position:absolute; bottom:10px; left:50%; transform:translateX(-50%); display:flex; gap:7px; z-index:6; }
+  .dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,.35); border:none; cursor:pointer; padding:0; transition:background .2s, transform .2s; }
+  .dot.active { background:#a3e635; transform:scale(1.25); }
+  .counter { position:absolute; bottom:10px; right:12px; background:rgba(23,22,27,.85); color:#fff; font-size:12px; padding:4px 10px; border-radius:20px; z-index:6; }
   .placeholder { color:#6f6f7d; text-align:center; padding:40px 10px; font-size:14px; }
+
+  /* ═══ Индикатор загрузки ═══ */
+  #loadpill { position:fixed; top:12px; left:50%; transform:translateX(-50%); background:#211f26; border:1px solid #33313b; color:#fff; font-size:13px; padding:8px 16px; border-radius:30px; z-index:99; display:flex; align-items:center; gap:10px; box-shadow:0 4px 20px rgba(0,0,0,.4); transition:opacity .5s ease, transform .5s ease; }
+  #loadpill.done { opacity:0; transform:translateX(-50%) translateY(-16px); pointer-events:none; }
+  #loadbar { width:70px; height:4px; background:#33313b; border-radius:4px; overflow:hidden; }
+  #loadbar i { display:block; height:100%; width:0%; background:#a3e635; transition:width .3s ease; }
+  .spin { width:14px; height:14px; border:2px solid #33313b; border-top-color:#a3e635; border-radius:50%; animation:rot .8s linear infinite; }
+  @keyframes rot { to { transform:rotate(360deg); } }
+
   .terms { color:#b9b9c4; font-size:15px; }
   .terms b { color:#fff; }
   .contact { text-align:center; margin-top:56px; }
@@ -47,9 +70,18 @@
   footer { text-align:center; color:#6f6f7d; font-size:13px; margin-top:56px; }
   .reveal { opacity:0; transform:translateY(24px); transition:opacity .6s ease, transform .6s ease; }
   .reveal.visible { opacity:1; transform:none; }
+  @media (prefers-reduced-motion:reduce){
+    .reveal { opacity:1; transform:none; transition:none; }
+    .slides { transition:none; }
+    .skeleton { animation:none; }
+  }
 </style>
 </head>
 <body>
+
+<!-- Индикатор загрузки демок -->
+<div id="loadpill"><div class="spin"></div><span id="loadtext">Scanning demos…</span><div id="loadbar"><i></i></div></div>
+
 <div class="wrap">
 
   <div class="banner"><img src="banner.jpg" alt="Corix — Full-Stack Engineering & UI/UX"></div>
@@ -58,7 +90,7 @@
   <p class="intro">I engineer Roblox experiences end-to-end — from exploit-proof backend architecture to interfaces built to turn players into payers. <b style="color:#fff">1M+ visits shipped.</b> One accountable developer, zero handoff losses, production-grade delivery.</p>
 
   <!-- HERO: один файл hero.gif в корне -->
-  <div class="hero"><img src="hero.gif" alt="Silk UI — animated badge demo" onerror="this.parentElement.style.display='none'"></div>
+  <div class="hero"><div class="skeleton"></div><img src="hero.gif" alt="Silk UI — animated badge demo"></div>
 
   <!-- ═══════ ЭКСПЕРТИЗА ═══════ -->
   <div class="section-title reveal">Core Expertise</div>
@@ -153,70 +185,4 @@
     <div class="hint">click to copy · Discord</div>
   </div>
 
-  <footer>UTC+5 · flexible EU/NA overlap · Roblox & DevForum: NekoPeonie</footer>
-</div>
-
-<script>
-// ═══ Копирование Discord ═══
-function copyTag(){
-  navigator.clipboard.writeText('corixdev');
-  const t=document.getElementById('tag');
-  t.innerText='Copied!';
-  setTimeout(()=>t.innerText='corixdev',1500);
-}
-
-// ═══ АВТО-СЛАЙДЕР: сам находит 1.gif, 2.gif... в папке кейса ═══
-function buildSlider(elId, folder, max){
-  const container=document.getElementById(elId);
-  const probes=[];
-  for(let i=1;i<=max;i++){
-    probes.push(new Promise(res=>{
-      const img=new Image();
-      img.onload=()=>res({i,ok:true});
-      img.onerror=()=>res({i,ok:false});
-      img.src=folder+'/'+i+'.gif';
-    }));
-  }
-  Promise.all(probes).then(results=>{
-    const ok=results.filter(r=>r.ok).sort((a,b)=>a.i-b.i);
-    if(ok.length===0){ container.innerHTML='<div class="placeholder">Demo GIFs coming soon</div>'; return; }
-    let html='<div class="slides">';
-    ok.forEach(r=>{ html+='<div class="slide"><img src="'+folder+'/'+r.i+'.gif" alt="demo"></div>'; });
-    html+='</div>';
-    if(ok.length>1){
-      html+='<button class="nav prev" onclick="moveSlide(\''+elId+'\',-1)">&#8249;</button>';
-      html+='<button class="nav next" onclick="moveSlide(\''+elId+'\',1)">&#8250;</button>';
-      html+='<div class="counter" id="'+elId+'-counter">1 / '+ok.length+'</div>';
-    }
-    container.classList.add('slider');
-    container.innerHTML=html;
-    container.dataset.index=0;
-    container.dataset.count=ok.length;
-    let startX=0;
-    container.addEventListener('touchstart',e=>startX=e.touches[0].clientX,{passive:true});
-    container.addEventListener('touchend',e=>{
-      const dx=e.changedTouches[0].clientX-startX;
-      if(Math.abs(dx)>40) moveSlide(elId, dx<0?1:-1);
-    },{passive:true});
-  });
-}
-function moveSlide(elId,dir){
-  const c=document.getElementById(elId);
-  const count=+c.dataset.count; let idx=+c.dataset.index;
-  idx=(idx+dir+count)%count; c.dataset.index=idx;
-  c.querySelector('.slides').style.transform='translateX(-'+(idx*100)+'%)';
-  const counter=document.getElementById(elId+'-counter');
-  if(counter) counter.textContent=(idx+1)+' / '+count;
-}
-buildSlider('slider1','case1',10);
-buildSlider('slider2','case2',10);
-buildSlider('slider3','case3',10);
-
-// ═══ Плавное появление при скролле ═══
-const io=new IntersectionObserver(es=>es.forEach(e=>{
-  if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); }
-}),{threshold:.1});
-document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-</script>
-</body>
-</html>
+  <footer>UTC+5 · flexible EU/NA overlap · Roblox & DevForum: NekoPeonie</f
