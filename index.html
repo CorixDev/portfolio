@@ -229,6 +229,12 @@ async function exists(url){
   try{ const r=await fetch(url,{method:'HEAD'}); return r.ok; }
   catch(e){ return false; }
 }
+// Ищет превью: сначала .jpg (легче), потом .png
+async function findPreview(base){
+  if(await exists(base+'.jpg')) return base+'.jpg';
+  if(await exists(base+'.png')) return base+'.png';
+  return null;
+}
 function loadImg(src){
   return new Promise(res=>{
     const img=new Image();
@@ -352,7 +358,7 @@ document.addEventListener('keydown',e=>{
 // ═══ ЗАГРУЗКА ═══
 async function boot(){
   const queue=[];
-  const heroPrev=(await exists('hero-preview.jpg'))?'hero-preview.jpg':null;
+  const heroPrev=await findPreview('hero-preview');
   const heroOk=await exists('hero.gif');
   if(heroOk){
     queue.push({type:'hero',src:'hero.gif'});
@@ -365,7 +371,7 @@ async function boot(){
     found[c.id]=[];
     for(let i=1;i<=MAX;i++){
       if(await exists(c.folder+'/'+i+'.gif')){
-        const prev=(await exists(c.folder+'/'+i+'-preview.jpg'))?c.folder+'/'+i+'-preview.jpg':null;
+        const prev=await findPreview(c.folder+'/'+i+'-preview');
         found[c.id].push({n:i,prev:prev});
       } else break;
     }
@@ -373,7 +379,6 @@ async function boot(){
     if(found[c.id].length===0){
       document.getElementById(c.id).innerHTML='<div class="placeholder">Demo GIFs coming soon</div>';
     } else {
-      // показываем размытое превью первой гифки ещё до её загрузки
       document.getElementById(c.id).innerHTML=skeletonHTML(found[c.id][0].prev);
     }
   }
