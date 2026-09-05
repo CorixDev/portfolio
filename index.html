@@ -16,7 +16,7 @@
   .accent { color:#a3e635; }
   .intro { color:#b9b9c4; max-width:760px; }
   .hero { margin:28px 0; }
-  .hero img { width:100%; border-radius:12px; display:block; }
+  .hero img { width:100%; border-radius:12px; display:block; cursor:zoom-in; }
   .section-title { font-size:20px; font-weight:800; color:#fff; border-left:4px solid #a3e635; padding-left:12px; margin:44px 0 20px; text-transform:uppercase; letter-spacing:2px; }
   .grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
   @media(max-width:700px){ .grid { grid-template-columns:1fr; } }
@@ -34,8 +34,10 @@
   .slider { position:relative; overflow:hidden; border-radius:12px; margin-bottom:14px; background:#100f14; }
   .slides { display:flex; transition:transform .45s ease; }
   .slide { min-width:100%; }
-  .slide img { width:100%; display:block; opacity:0; transition:opacity .4s ease; }
-  .slide img.on { opacity:1; }
+  .slide img { width:100%; display:block; cursor:zoom-in;
+    opacity:.4; filter:blur(14px); transform:scale(1.04);
+    transition:opacity .6s ease, filter .6s ease, transform .6s ease; }
+  .slide img.on { opacity:1; filter:blur(0); transform:scale(1); }
   .skeleton { aspect-ratio:16/9; display:flex; flex-direction:column; gap:12px; align-items:center; justify-content:center;
     background:linear-gradient(100deg,#100f14 40%,#1c1a22 50%,#100f14 60%); background-size:200% 100%;
     animation:shimmer 1.4s infinite linear; border-radius:12px; color:#6f6f7d; font-size:13px; }
@@ -45,13 +47,30 @@
   .nav { position:absolute; top:50%; transform:translateY(-50%); background:rgba(23,22,27,.75); color:#a3e635; border:none; font-size:28px; width:44px; height:44px; border-radius:50%; cursor:pointer; line-height:1; z-index:2; }
   .nav:hover { background:rgba(23,22,27,.95); }
   .prev { left:10px; } .next { right:10px; }
-  @media (hover:none), (pointer:coarse) { .nav { display:none; } } /* на телефонах стрелки прячем */
+  @media (hover:none), (pointer:coarse) { .nav { display:none; } }
   .dots { position:absolute; bottom:12px; left:50%; transform:translateX(-50%); display:flex; gap:7px; z-index:2; }
   .dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,.35); border:none; cursor:pointer; padding:0; transition:background .2s, transform .2s; }
   .dot.active { background:#a3e635; transform:scale(1.3); }
+  .expand-hint { position:absolute; top:10px; right:10px; background:rgba(23,22,27,.7); color:#a3e635; padding:4px 9px; border-radius:8px; font-size:13px; pointer-events:none; opacity:.85; z-index:2; }
   .placeholder { color:#6f6f7d; text-align:center; padding:40px 10px; font-size:14px; }
 
-  /* ═══ ПЛАШКА ЗАГРУЗКИ ═══ */
+  /* ═══ ФУЛСКРИН ═══ */
+  .lb { position:fixed; inset:0; background:rgba(10,9,13,.96); z-index:100; display:flex; align-items:center; justify-content:center;
+    opacity:0; pointer-events:none; transition:opacity .3s ease; }
+  .lb.open { opacity:1; pointer-events:auto; }
+  .lb img { max-width:96vw; max-height:88vh; border-radius:10px; box-shadow:0 10px 50px rgba(0,0,0,.6); cursor:zoom-out; }
+  .lb-close { position:absolute; top:16px; right:18px; background:rgba(35,33,43,.85); color:#fff; border:1px solid #33313b;
+    width:44px; height:44px; border-radius:50%; font-size:20px; cursor:pointer; z-index:3; }
+  .lb-close:hover { border-color:#a3e635; color:#a3e635; }
+  .lb-nav { position:absolute; top:50%; transform:translateY(-50%); background:rgba(35,33,43,.85); color:#a3e635; border:1px solid #33313b;
+    width:50px; height:50px; border-radius:50%; font-size:26px; cursor:pointer; z-index:3; line-height:1; }
+  .lb-nav:hover { border-color:#a3e635; }
+  .lb-prev { left:14px; } .lb-next { right:14px; }
+  .lb-counter { position:absolute; bottom:18px; left:50%; transform:translateX(-50%); color:#b9b9c4; font-size:14px;
+    background:rgba(35,33,43,.85); padding:6px 14px; border-radius:20px; border:1px solid #33313b; z-index:3; }
+  .lb-hint { position:absolute; top:20px; left:50%; transform:translateX(-50%); color:#6f6f7d; font-size:12px; z-index:3; }
+
+  /* ═══ ПЛАШКА ПРОГРЕССА ═══ */
   .pill { position:fixed; left:50%; transform:translateX(-50%); bottom:18px; background:#211f26; border:1px solid #33313b;
     color:#e6e6ea; padding:10px 18px; border-radius:30px; font-size:13px; z-index:99;
     box-shadow:0 4px 20px rgba(0,0,0,.45); transition:opacity .5s ease; min-width:200px; text-align:center; }
@@ -78,10 +97,8 @@
   <div class="tagline">Systems that <span class="accent">scale</span>. Interfaces that <span class="accent">convert</span>.</div>
   <p class="intro">I engineer Roblox experiences end-to-end — from exploit-proof backend architecture to interfaces built to turn players into payers. <b style="color:#fff">1M+ visits shipped.</b> One accountable developer, zero handoff losses, production-grade delivery.</p>
 
-  <!-- HERO -->
   <div class="hero" id="heroBox"><div class="skeleton"><div class="spin"></div>Loading demo…</div></div>
 
-  <!-- ЭКСПЕРТИЗА -->
   <div class="section-title reveal">Core Expertise</div>
   <div class="grid">
     <div class="mini reveal">
@@ -111,13 +128,12 @@
     <div class="mini reveal">
       <h4>🐍 External Tooling</h4>
       <ul>
-        <li>Python: data processing, automation, webhooks & API integrations</li>
+        <li>Python: data processing, task automation, webhooks & API integrations</li>
         <li>Rapid prototyping with production-grade turnaround</li>
       </ul>
     </div>
   </div>
 
-  <!-- КЕЙСЫ -->
   <div class="section-title reveal">Case Studies</div>
 
   <div class="card reveal">
@@ -152,7 +168,6 @@
     </ul>
   </div>
 
-  <!-- УСЛУГИ -->
   <div class="section-title reveal">What You Get</div>
   <div class="card reveal">
     <ul>
@@ -177,6 +192,16 @@
   <footer>UTC+5 · flexible EU/NA overlap · Roblox & DevForum: NekoPeonie</footer>
 </div>
 
+<!-- ФУЛСКРИН -->
+<div class="lb" id="lb" onclick="if(event.target===this)closeLb()">
+  <div class="lb-hint">click outside or press Esc to close</div>
+  <button class="lb-close" onclick="closeLb()">✕</button>
+  <button class="lb-nav lb-prev" id="lbPrev" onclick="lbMove(-1)">&#8249;</button>
+  <img id="lbImg" src="" alt="fullscreen demo" onclick="closeLb()">
+  <button class="lb-nav lb-next" id="lbNext" onclick="lbMove(1)">&#8250;</button>
+  <div class="lb-counter" id="lbCounter"></div>
+</div>
+
 <!-- ПЛАШКА ПРОГРЕССА -->
 <div class="pill hidden" id="pill"><span id="pillText">Loading demos…</span><div class="bar" id="pillBar"></div></div>
 
@@ -189,17 +214,16 @@ function copyTag(){
   setTimeout(()=>t.innerText='corixdev',1500);
 }
 
-// ═══ ДВИЖОК ЗАГРУЗКИ ═══
+// ═══ СОСТОЯНИЕ ═══
 const CASES=[{id:'slider1',folder:'case1'},{id:'slider2',folder:'case2'},{id:'slider3',folder:'case3'}];
 const MAX=10;
-const state={}; // sliderId -> {files:[], current:0}
+const state={};
 let totalFound=0, totalLoaded=0;
 
 async function exists(url){
   try{ const r=await fetch(url,{method:'HEAD'}); return r.ok; }
   catch(e){ return false; }
 }
-
 function loadImg(src){
   return new Promise(res=>{
     const img=new Image();
@@ -209,29 +233,30 @@ function loadImg(src){
   });
 }
 
+// ═══ ПЛАШКА ═══
 function updatePill(){
-  const pill=document.getElementById('pill');
-  const txt=document.getElementById('pillText');
-  const bar=document.getElementById('pillBar');
+  const pill=document.getElementById('pill'), txt=document.getElementById('pillText'), bar=document.getElementById('pillBar');
   if(totalFound===0){ pill.classList.add('hidden'); return; }
   pill.classList.remove('hidden');
   if(totalLoaded<totalFound){
     txt.textContent='⏳ Loading demos '+totalLoaded+' / '+totalFound+'…';
     bar.style.width=(totalLoaded/totalFound*100)+'%';
   } else {
-    txt.textContent='✓ All demos loaded';
-    bar.style.width='100%';
+    txt.textContent='✓ All demos loaded'; bar.style.width='100%';
     setTimeout(()=>pill.classList.add('hidden'),2000);
   }
 }
 
+// ═══ СЛАЙДЕР ═══
 function renderSlider(id){
-  const c=document.getElementById(id);
-  const st=state[id];
-  if(!st || st.files.length===0) return;
+  const c=document.getElementById(id), st=state[id];
+  if(!st||st.files.length===0) return;
   let html='<div class="slides">';
-  st.files.forEach(f=>{ html+='<div class="slide"><img src="'+f+'" alt="demo" onload="this.classList.add(\'on\')"></div>'; });
+  st.files.forEach((f,i)=>{
+    html+='<div class="slide"><img src="'+f+'" alt="demo" onclick="openLb(\''+id+'\','+i+')" onload="var s=this;requestAnimationFrame(()=>requestAnimationFrame(()=>s.classList.add(\'on\')))"></div>';
+  });
   html+='</div>';
+  html+='<div class="expand-hint">⤢</div>';
   if(st.files.length>1){
     html+='<button class="nav prev" onclick="moveSlide(\''+id+'\',-1)">&#8249;</button>';
     html+='<button class="nav next" onclick="moveSlide(\''+id+'\',1)">&#8250;</button>';
@@ -242,7 +267,6 @@ function renderSlider(id){
   c.innerHTML=html;
   c.classList.add('slider');
   applyTransform(id);
-  // свайп
   if(!c.dataset.touch){
     c.dataset.touch='1';
     let sx=0;
@@ -253,10 +277,8 @@ function renderSlider(id){
     },{passive:true});
   }
 }
-
 function applyTransform(id){
-  const c=document.getElementById(id);
-  const st=state[id];
+  const c=document.getElementById(id), st=state[id];
   const slides=c.querySelector('.slides');
   if(slides) slides.style.transform='translateX(-'+(st.current*100)+'%)';
   c.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===st.current));
@@ -266,13 +288,54 @@ function moveSlide(id,dir){
   st.current=(st.current+dir+st.files.length)%st.files.length;
   applyTransform(id);
 }
-function goTo(id,idx){
-  const st=state[id]; if(!st) return;
-  st.current=idx; applyTransform(id);
-}
+function goTo(id,idx){ const st=state[id]; if(!st) return; st.current=idx; applyTransform(id); }
 
+// ═══ ФУЛСКРИН ═══
+let lbId=null;
+function openLb(id,idx){
+  const st=state[id]; if(!st||st.files.length===0) return;
+  lbId=id; st.current=idx;
+  renderLb();
+  document.getElementById('lb').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function renderLb(){
+  const st=state[lbId];
+  document.getElementById('lbImg').src=st.files[st.current];
+  const many=st.files.length>1;
+  document.getElementById('lbPrev').style.display=many?'block':'none';
+  document.getElementById('lbNext').style.display=many?'block':'none';
+  document.getElementById('lbCounter').textContent=many?(st.current+1)+' / '+st.files.length:'';
+  if(lbId!=='hero') applyTransform(lbId);
+}
+function lbMove(dir){
+  const st=state[lbId]; if(!st||st.files.length<2) return;
+  st.current=(st.current+dir+st.files.length)%st.files.length;
+  renderLb();
+}
+function closeLb(){
+  document.getElementById('lb').classList.remove('open');
+  document.body.style.overflow='';
+  lbId=null;
+}
+document.addEventListener('keydown',e=>{
+  if(!lbId) return;
+  if(e.key==='Escape') closeLb();
+  if(e.key==='ArrowLeft') lbMove(-1);
+  if(e.key==='ArrowRight') lbMove(1);
+});
+// свайп в фулскрине
+(function(){
+  const lb=document.getElementById('lb'); let sx=0;
+  lb.addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});
+  lb.addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-sx;
+    if(Math.abs(dx)>50) lbMove(dx<0?1:-1);
+  },{passive:true});
+})();
+
+// ═══ ЗАГРУЗКА ═══
 async function boot(){
-  // 1) Разведка: узнаём, какие гифки существуют (HEAD-запросы, ничего не скачиваем)
   const queue=[];
   if(await exists('hero.gif')) queue.push({type:'hero',src:'hero.gif'});
   const found={};
@@ -280,14 +343,13 @@ async function boot(){
     found[c.id]=[];
     for(let i=1;i<=MAX;i++){
       if(await exists(c.folder+'/'+i+'.gif')) found[c.id].push(i);
-      else break; // нумерация должна быть сплошной: 1,2,3...
+      else break;
     }
     state[c.id]={files:[],current:0};
     if(found[c.id].length===0){
       document.getElementById(c.id).innerHTML='<div class="placeholder">Demo GIFs coming soon</div>';
     }
   }
-  // 2) Очередь: сначала hero, потом по кругу — 1-я гифка каждого кейса, 2-я, 3-я...
   for(let round=1;round<=MAX;round++){
     for(const c of CASES){
       if(found[c.id].includes(round)) queue.push({type:'slide',id:c.id,src:c.folder+'/'+round+'.gif'});
@@ -297,20 +359,21 @@ async function boot(){
   if(totalFound===0){ document.getElementById('heroBox').style.display='none'; return; }
   updatePill();
 
-  // 3) Грузим строго по очереди — одну за одной (бережём слабый интернет)
   for(const item of queue){
     const r=await loadImg(item.src);
     if(r.ok){
       if(item.type==='hero'){
-        document.getElementById('heroBox').innerHTML='<img src="'+item.src+'" alt="Hero demo" onload="this.style.opacity=1" style="opacity:0;transition:opacity .4s ease;width:100%;border-radius:12px;display:block;">';
+        state['hero']={files:[item.src],current:0};
+        document.getElementById('heroBox').innerHTML='<img src="'+item.src+'" alt="Hero demo" onclick="openLb(\'hero\',0)" style="opacity:.4;filter:blur(14px);transform:scale(1.04);transition:all .6s ease;" onload="var s=this;requestAnimationFrame(()=>requestAnimationFrame(()=>{s.style.opacity=1;s.style.filter=\'blur(0)\';s.style.transform=\'scale(1)\';}))">';
       } else {
         state[item.id].files.push(item.src);
         renderSlider(item.id);
+        // если фулскрин открыт на этом слайдере — обновим счётчик
+        if(lbId===item.id) renderLb();
       }
     }
     totalLoaded++; updatePill();
   }
-  // если hero так и не загрузился — прячем блок
   if(!document.getElementById('heroBox').querySelector('img')){
     document.getElementById('heroBox').style.display='none';
   }
