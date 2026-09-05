@@ -13,14 +13,30 @@
   .banner img { width:100%; border-radius:16px; display:block; }
   .tagline { font-size:clamp(22px,4vw,30px); font-weight:800; color:#fff; margin:36px 0 12px; }
   .accent { color:#a3e635; }
-  .intro { color:#b9b9c4; max-width:720px; }
+  .intro { color:#b9b9c4; max-width:760px; }
   .hero { margin:28px 0; }
-  .hero img, .card img { width:100%; border-radius:12px; display:block; }
+  .hero img { width:100%; border-radius:12px; display:block; }
   .section-title { font-size:20px; font-weight:800; color:#fff; border-left:4px solid #a3e635; padding-left:12px; margin:44px 0 20px; text-transform:uppercase; letter-spacing:2px; }
-  .card { background:#1e1e28; border:1px solid #2b2b39; border-radius:16px; padding:24px; margin-bottom:24px; }
-  .card h3 { color:#fff; font-size:18px; margin-bottom:10px; }
-  .card ul { margin:12px 0 16px 18px; color:#b9b9c4; font-size:15px; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media(max-width:700px){ .grid { grid-template-columns:1fr; } }
+  .mini { background:#1e1e28; border:1px solid #2b2b39; border-radius:16px; padding:20px; }
+  .mini h4 { color:#a3e635; font-size:15px; margin-bottom:8px; }
+  .mini ul { margin-left:18px; color:#b9b9c4; font-size:14px; }
+  .mini li { margin-bottom:5px; }
+  .card { background:#1e1e28; border:1px solid #2b2b39; border-radius:16px; padding:24px; margin-bottom:24px; transition:transform .2s ease, border-color .2s ease; }
+  .card:hover { transform:translateY(-4px); border-color:#a3e635; }
+  .card h3 { color:#fff; font-size:18px; margin-bottom:12px; }
+  .card ul { margin:12px 0 4px 18px; color:#b9b9c4; font-size:15px; }
   .card li { margin-bottom:6px; }
+  .slider { position:relative; overflow:hidden; border-radius:12px; margin-bottom:14px; background:#121218; }
+  .slides { display:flex; transition:transform .45s ease; }
+  .slide { min-width:100%; }
+  .slide img { width:100%; display:block; }
+  .nav { position:absolute; top:50%; transform:translateY(-50%); background:rgba(22,22,30,.75); color:#a3e635; border:none; font-size:28px; width:44px; height:44px; border-radius:50%; cursor:pointer; line-height:1; }
+  .nav:hover { background:rgba(22,22,30,.95); }
+  .prev { left:10px; } .next { right:10px; }
+  .counter { position:absolute; bottom:10px; right:12px; background:rgba(22,22,30,.85); color:#fff; font-size:12px; padding:4px 10px; border-radius:20px; }
+  .placeholder { color:#6f6f7d; text-align:center; padding:40px 10px; font-size:14px; }
   .terms { color:#b9b9c4; font-size:15px; }
   .terms b { color:#fff; }
   .contact { text-align:center; margin-top:56px; }
@@ -29,6 +45,8 @@
   .discord-tag:hover { transform:scale(1.04); }
   .hint { font-size:13px; color:#6f6f7d; margin-top:10px; }
   footer { text-align:center; color:#6f6f7d; font-size:13px; margin-top:56px; }
+  .reveal { opacity:0; transform:translateY(24px); transition:opacity .6s ease, transform .6s ease; }
+  .reveal.visible { opacity:1; transform:none; }
 </style>
 </head>
 <body>
@@ -39,43 +57,97 @@
   <div class="tagline">Systems that <span class="accent">scale</span>. Interfaces that <span class="accent">convert</span>.</div>
   <p class="intro">I engineer Roblox experiences end-to-end — from exploit-proof backend architecture to interfaces built to turn players into payers. <b style="color:#fff">1M+ visits shipped.</b> One accountable developer, zero handoff losses, production-grade delivery.</p>
 
-  <div class="hero"><img src="hero.gif" alt="Silk UI — animated badge demo"></div>
+  <!-- HERO: один файл hero.gif в корне -->
+  <div class="hero"><img src="hero.gif" alt="Silk UI — animated badge demo" onerror="this.parentElement.style.display='none'"></div>
 
-  <div class="section-title">Case Studies</div>
+  <!-- ═══════ ЭКСПЕРТИЗА ═══════ -->
+  <div class="section-title reveal">Core Expertise</div>
+  <div class="grid">
+    <div class="mini reveal">
+      <h4>🎨 UI/UX Engineering — Signature</h4>
+      <ul>
+        <li>Pixel-perfect adaptive UI — mathematical scaling (UDim2), flawless on every device</li>
+        <li>Procedural animation, dynamic gradients, particles, Z-index layering</li>
+        <li>Custom ViewportFrame rendering: 3D previews, animated badges</li>
+      </ul>
+    </div>
+    <div class="mini reveal">
+      <h4>⚙️ Luau Architecture</h4>
+      <ul>
+        <li>OOP, modular frameworks, custom state machines</li>
+        <li>Grid building, inventories, tabbed live leaderboards, avatar editors</li>
+        <li>Custom Studio plugins for workflow automation</li>
+      </ul>
+    </div>
+    <div class="mini reveal">
+      <h4>🔒 Data & Monetization</h4>
+      <ul>
+        <li>ProfileService pipelines with strict server-side validation</li>
+        <li>MarketplaceService, Bulk Purchase flows, funnels built around ARPPU</li>
+        <li>Anti-exploit architecture, memory-leak elimination, high-CCU optimization</li>
+      </ul>
+    </div>
+    <div class="mini reveal">
+      <h4>🐍 External Tooling</h4>
+      <ul>
+        <li>Python: data processing, automation, webhooks & API integrations</li>
+        <li>Rapid prototyping with production-grade turnaround</li>
+      </ul>
+    </div>
+  </div>
 
-  <div class="card">
-    <h3>"Silk" — Premium UI Framework & Live Leaderboards</h3>
-    <img src="case1.gif" alt="Silk UI demo">
+  <!-- ═══════ КЕЙСЫ ═══════ -->
+  <div class="section-title reveal">Case Studies</div>
+
+  <div class="card reveal">
+    <h3>"Silk" — Premium UI Framework, Animated Badges & Live Leaderboards</h3>
+    <div id="slider1"></div>
     <ul>
       <li>Animated 3D badges + 4-tab Live Leaderboard (Daily / Weekly / Monthly / All-Time) — <b style="color:#fff">UI and backend, 100% solo</b></li>
-      <li>Podium NPC re-skins to the #1 player's avatar in real time</li>
+      <li>Podium NPC re-skins to the #1 player's avatar in real time — a competition loop that drives session time and spending</li>
+      <li>Time-windowed data pipelines with automatic period resets</li>
       <li>Pixel-perfect on every device — mathematical scaling, zero rework</li>
     </ul>
   </div>
 
-  <div class="card">
+  <div class="card reveal">
     <h3>Avatar Catalog Marketplace</h3>
-    <img src="case2.gif" alt="Catalog demo">
+    <div id="slider2"></div>
     <ul>
       <li>High-concurrency try-on & purchase system</li>
       <li>PromptBulkPurchase — multi-item checkout in one flow, higher average transaction</li>
+      <li>Custom HumanoidDescription pipeline with instant ViewportFrame rendering</li>
       <li>Exploit-proof data validation — zero trust in client input</li>
     </ul>
   </div>
 
-  <div class="card">
+  <div class="card reveal">
     <h3>Tycoon Core — Grid Building & State Management</h3>
-    <img src="case3.gif" alt="Tycoon demo">
+    <div id="slider3"></div>
     <ul>
       <li>Real-time placement: collision, rotation, full server-side validation</li>
-      <li>Optimized AI and resource processing — stable 60 FPS at high player counts</li>
+      <li>Optimized customer AI and resource processing — stable 60 FPS at high player counts</li>
+      <li>Modular, documented codebase built for long-term maintenance</li>
     </ul>
   </div>
 
-  <div class="section-title">Terms</div>
-  <p class="terms"><b>$30–50/hr</b> by complexity · <b>Fixed price</b> after a scoped brief · 50% upfront or <b>Escrow</b> · Crypto / Robux / Bank Transfer</p>
+  <!-- ═══════ УСЛУГИ ═══════ -->
+  <div class="section-title reveal">What You Get</div>
+  <div class="card reveal">
+    <ul>
+      <li><b style="color:#fff">Full-Stack Game Architecture</b> — database → gameplay → UI, one accountable engineer</li>
+      <li><b style="color:#fff">Premium UI/UX Engineering</b> — design, scripting, animation of adaptive interfaces</li>
+      <li><b style="color:#fff">Custom Systems</b> — inventories, shops, tycoon mechanics, data pipelines</li>
+      <li><b style="color:#fff">Performance & Security Audits</b> — profiling, memory-leak fixes, anti-exploit hardening</li>
+      <li><b style="color:#fff">External Automation</b> — Python bots, API/webhooks, Studio plugins</li>
+      <li>Private case studies available on request (NDA-safe)</li>
+    </ul>
+  </div>
 
-  <div class="contact">
+  <div class="section-title reveal">Terms</div>
+  <p class="terms reveal"><b>$30–50/hr</b> by complexity · <b>Fixed price</b> after a scoped brief · 50% upfront or <b>Escrow</b> · Crypto / Robux / Bank Transfer</p>
+
+  <div class="contact reveal">
     <p>Currently booking — send a one-line idea, get a scoping plan within 24 hours.</p>
     <div class="discord-tag" onclick="copyTag()" id="tag">corixdev</div>
     <div class="hint">click to copy · Discord</div>
@@ -85,12 +157,66 @@
 </div>
 
 <script>
+// ═══ Копирование Discord ═══
 function copyTag(){
   navigator.clipboard.writeText('corixdev');
   const t=document.getElementById('tag');
   t.innerText='Copied!';
   setTimeout(()=>t.innerText='corixdev',1500);
 }
+
+// ═══ АВТО-СЛАЙДЕР: сам находит 1.gif, 2.gif... в папке кейса ═══
+function buildSlider(elId, folder, max){
+  const container=document.getElementById(elId);
+  const probes=[];
+  for(let i=1;i<=max;i++){
+    probes.push(new Promise(res=>{
+      const img=new Image();
+      img.onload=()=>res({i,ok:true});
+      img.onerror=()=>res({i,ok:false});
+      img.src=folder+'/'+i+'.gif';
+    }));
+  }
+  Promise.all(probes).then(results=>{
+    const ok=results.filter(r=>r.ok).sort((a,b)=>a.i-b.i);
+    if(ok.length===0){ container.innerHTML='<div class="placeholder">Demo GIFs coming soon</div>'; return; }
+    let html='<div class="slides">';
+    ok.forEach(r=>{ html+='<div class="slide"><img src="'+folder+'/'+r.i+'.gif" alt="demo"></div>'; });
+    html+='</div>';
+    if(ok.length>1){
+      html+='<button class="nav prev" onclick="moveSlide(\''+elId+'\',-1)">&#8249;</button>';
+      html+='<button class="nav next" onclick="moveSlide(\''+elId+'\',1)">&#8250;</button>';
+      html+='<div class="counter" id="'+elId+'-counter">1 / '+ok.length+'</div>';
+    }
+    container.classList.add('slider');
+    container.innerHTML=html;
+    container.dataset.index=0;
+    container.dataset.count=ok.length;
+    let startX=0;
+    container.addEventListener('touchstart',e=>startX=e.touches[0].clientX,{passive:true});
+    container.addEventListener('touchend',e=>{
+      const dx=e.changedTouches[0].clientX-startX;
+      if(Math.abs(dx)>40) moveSlide(elId, dx<0?1:-1);
+    },{passive:true});
+  });
+}
+function moveSlide(elId,dir){
+  const c=document.getElementById(elId);
+  const count=+c.dataset.count; let idx=+c.dataset.index;
+  idx=(idx+dir+count)%count; c.dataset.index=idx;
+  c.querySelector('.slides').style.transform='translateX(-'+(idx*100)+'%)';
+  const counter=document.getElementById(elId+'-counter');
+  if(counter) counter.textContent=(idx+1)+' / '+count;
+}
+buildSlider('slider1','case1',10);
+buildSlider('slider2','case2',10);
+buildSlider('slider3','case3',10);
+
+// ═══ Плавное появление при скролле ═══
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); }
+}),{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 </script>
 </body>
 </html>
