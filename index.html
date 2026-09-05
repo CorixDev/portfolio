@@ -38,9 +38,12 @@
     opacity:.4; filter:blur(14px); transform:scale(1.04);
     transition:opacity .6s ease, filter .6s ease, transform .6s ease; }
   .slide img.on { opacity:1; filter:blur(0); transform:scale(1); }
-  .skeleton { aspect-ratio:16/9; display:flex; flex-direction:column; gap:12px; align-items:center; justify-content:center;
+  .skeleton { aspect-ratio:16/9; position:relative; overflow:hidden; display:flex; flex-direction:column; gap:12px; align-items:center; justify-content:center;
     background:linear-gradient(100deg,#100f14 40%,#1c1a22 50%,#100f14 60%); background-size:200% 100%;
     animation:shimmer 1.4s infinite linear; border-radius:12px; color:#6f6f7d; font-size:13px; }
+  .skeleton .previmg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:blur(14px); transform:scale(1.08); }
+  .skeleton .sk-overlay { position:absolute; inset:0; display:flex; flex-direction:column; gap:12px; align-items:center; justify-content:center;
+    background:rgba(16,15,20,.35); color:#e6e6ea; font-size:13px; }
   @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
   .spin { width:26px; height:26px; border:3px solid #33313b; border-top-color:#a3e635; border-radius:50%; animation:rot 1s linear infinite; }
   @keyframes rot { to{transform:rotate(360deg)} }
@@ -66,8 +69,10 @@
     width:50px; height:50px; border-radius:50%; font-size:26px; cursor:pointer; z-index:3; line-height:1; }
   .lb-nav:hover { border-color:#a3e635; }
   .lb-prev { left:14px; } .lb-next { right:14px; }
-  .lb-counter { position:absolute; bottom:18px; left:50%; transform:translateX(-50%); color:#b9b9c4; font-size:14px;
-    background:rgba(35,33,43,.85); padding:6px 14px; border-radius:20px; border:1px solid #33313b; z-index:3; }
+  @media (hover:none), (pointer:coarse) { .lb-nav { display:none; } } /* на телефонах стрелок нет — точки */
+  .lb-dots { position:absolute; bottom:18px; left:50%; transform:translateX(-50%); display:flex; gap:8px; z-index:3; }
+  .lb-dot { width:10px; height:10px; border-radius:50%; background:rgba(255,255,255,.35); border:none; cursor:pointer; padding:0; transition:background .2s, transform .2s; }
+  .lb-dot.active { background:#a3e635; transform:scale(1.3); }
   .lb-hint { position:absolute; top:20px; left:50%; transform:translateX(-50%); color:#6f6f7d; font-size:12px; z-index:3; }
 
   /* ═══ ПЛАШКА ПРОГРЕССА ═══ */
@@ -199,7 +204,7 @@
   <button class="lb-nav lb-prev" id="lbPrev" onclick="lbMove(-1)">&#8249;</button>
   <img id="lbImg" src="" alt="fullscreen demo" onclick="closeLb()">
   <button class="lb-nav lb-next" id="lbNext" onclick="lbMove(1)">&#8250;</button>
-  <div class="lb-counter" id="lbCounter"></div>
+  <div class="lb-dots" id="lbDots"></div>
 </div>
 
 <!-- ПЛАШКА ПРОГРЕССА -->
@@ -231,6 +236,11 @@ function loadImg(src){
     img.onerror=()=>res({src,ok:false});
     img.src=src;
   });
+}
+function skeletonHTML(prev){
+  const inner='<div class="spin"></div>Loading demo…';
+  if(prev) return '<div class="skeleton"><img class="previmg" src="'+prev+'" alt=""><div class="sk-overlay">'+inner+'</div></div>';
+  return '<div class="skeleton">'+inner+'</div>';
 }
 
 // ═══ ПЛАШКА ═══
@@ -305,7 +315,12 @@ function renderLb(){
   const many=st.files.length>1;
   document.getElementById('lbPrev').style.display=many?'block':'none';
   document.getElementById('lbNext').style.display=many?'block':'none';
-  document.getElementById('lbCounter').textContent=many?(st.current+1)+' / '+st.files.length:'';
+  const dots=document.getElementById('lbDots');
+  if(many){
+    let h='';
+    st.files.forEach((f,i)=>{ h+='<button class="lb-dot'+(i===st.current?' active':'')+'" onclick="lbGo('+i+')"></button>'; });
+    dots.innerHTML=h; dots.style.display='flex';
+  } else { dots.style.display='none'; }
   if(lbId!=='hero') applyTransform(lbId);
 }
 function lbMove(dir){
@@ -313,6 +328,7 @@ function lbMove(dir){
   st.current=(st.current+dir+st.files.length)%st.files.length;
   renderLb();
 }
+function lbGo(idx){ const st=state[lbId]; if(!st) return; st.current=idx; renderLb(); }
 function closeLb(){
   document.getElementById('lb').classList.remove('open');
   document.body.style.overflow='';
@@ -324,7 +340,6 @@ document.addEventListener('keydown',e=>{
   if(e.key==='ArrowLeft') lbMove(-1);
   if(e.key==='ArrowRight') lbMove(1);
 });
-// свайп в фулскрине
 (function(){
   const lb=document.getElementById('lb'); let sx=0;
   lb.addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});
@@ -337,26 +352,39 @@ document.addEventListener('keydown',e=>{
 // ═══ ЗАГРУЗКА ═══
 async function boot(){
   const queue=[];
-  if(await exists('hero.gif')) queue.push({type:'hero',src:'hero.gif'});
+  const heroPrev=(await exists('hero-preview.jpg'))?'hero-preview.jpg':null;
+  const heroOk=await exists('hero.gif');
+  if(heroOk){
+    queue.push({type:'hero',src:'hero.gif'});
+    document.getElementById('heroBox').innerHTML=skeletonHTML(heroPrev);
+  } else {
+    document.getElementById('heroBox').style.display='none';
+  }
   const found={};
   for(const c of CASES){
     found[c.id]=[];
     for(let i=1;i<=MAX;i++){
-      if(await exists(c.folder+'/'+i+'.gif')) found[c.id].push(i);
-      else break;
+      if(await exists(c.folder+'/'+i+'.gif')){
+        const prev=(await exists(c.folder+'/'+i+'-preview.jpg'))?c.folder+'/'+i+'-preview.jpg':null;
+        found[c.id].push({n:i,prev:prev});
+      } else break;
     }
     state[c.id]={files:[],current:0};
     if(found[c.id].length===0){
       document.getElementById(c.id).innerHTML='<div class="placeholder">Demo GIFs coming soon</div>';
+    } else {
+      // показываем размытое превью первой гифки ещё до её загрузки
+      document.getElementById(c.id).innerHTML=skeletonHTML(found[c.id][0].prev);
     }
   }
   for(let round=1;round<=MAX;round++){
     for(const c of CASES){
-      if(found[c.id].includes(round)) queue.push({type:'slide',id:c.id,src:c.folder+'/'+round+'.gif'});
+      const f=found[c.id].find(x=>x.n===round);
+      if(f) queue.push({type:'slide',id:c.id,src:c.folder+'/'+round+'.gif'});
     }
   }
   totalFound=queue.length;
-  if(totalFound===0){ document.getElementById('heroBox').style.display='none'; return; }
+  if(totalFound===0){ return; }
   updatePill();
 
   for(const item of queue){
@@ -368,14 +396,10 @@ async function boot(){
       } else {
         state[item.id].files.push(item.src);
         renderSlider(item.id);
-        // если фулскрин открыт на этом слайдере — обновим счётчик
         if(lbId===item.id) renderLb();
       }
     }
     totalLoaded++; updatePill();
-  }
-  if(!document.getElementById('heroBox').querySelector('img')){
-    document.getElementById('heroBox').style.display='none';
   }
 }
 boot();
