@@ -57,21 +57,17 @@
   .expand-hint { position:absolute; top:10px; right:10px; background:rgba(23,22,27,.7); color:#a3e635; padding:4px 9px; border-radius:8px; font-size:13px; pointer-events:none; opacity:.85; z-index:2; }
   .placeholder { color:#6f6f7d; text-align:center; padding:40px 10px; font-size:14px; }
 
-  /* ═══ ФУЛСКРИН ═══ */
-  .lb { position:fixed; inset:0; background:rgba(10,9,13,.96); z-index:100; display:flex; align-items:center; justify-content:center;
+  /* ═══ ФУЛСКРИН: flex-колонка — точки ВСЕГДА под картинкой, перекрытие невозможно ═══ */
+  .lb { position:fixed; inset:0; background:rgba(10,9,13,.96); z-index:100;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;
     opacity:0; pointer-events:none; transition:opacity .3s ease; }
   .lb.open { opacity:1; pointer-events:auto; }
-  .lb img { max-width:96vw; max-height:88vh; border-radius:10px; box-shadow:0 10px 50px rgba(0,0,0,.6); cursor:zoom-out; }
-  .lb-close { position:absolute; top:16px; right:18px; background:rgba(35,33,43,.85); color:#fff; border:1px solid #33313b;
+  .lb img { max-width:94vw; max-height:calc(100vh - 130px); border-radius:10px; box-shadow:0 10px 50px rgba(0,0,0,.6); cursor:zoom-out; }
+  .lb-close { position:absolute; top:12px; right:16px; background:rgba(35,33,43,.85); color:#fff; border:1px solid #33313b;
     width:44px; height:44px; border-radius:50%; font-size:20px; cursor:pointer; z-index:3; }
   .lb-close:hover { border-color:#a3e635; color:#a3e635; }
-  .lb-nav { position:absolute; top:50%; transform:translateY(-50%); background:rgba(35,33,43,.85); color:#a3e635; border:1px solid #33313b;
-    width:50px; height:50px; border-radius:50%; font-size:26px; cursor:pointer; z-index:3; line-height:1; }
-  .lb-nav:hover { border-color:#a3e635; }
-  .lb-prev { left:14px; } .lb-next { right:14px; }
-  @media (hover:none), (pointer:coarse) { .lb-nav { display:none; } } /* на телефонах стрелок нет — точки */
-  .lb-dots { position:absolute; bottom:18px; left:50%; transform:translateX(-50%); display:flex; gap:8px; z-index:3; }
-  .lb-dot { width:10px; height:10px; border-radius:50%; background:rgba(255,255,255,.35); border:none; cursor:pointer; padding:0; transition:background .2s, transform .2s; }
+  .lb-dots { display:flex; gap:9px; z-index:3; }
+  .lb-dot { width:11px; height:11px; border-radius:50%; background:rgba(255,255,255,.35); border:none; cursor:pointer; padding:0; transition:background .2s, transform .2s; }
   .lb-dot.active { background:#a3e635; transform:scale(1.3); }
   .lb-hint { position:absolute; top:20px; left:50%; transform:translateX(-50%); color:#6f6f7d; font-size:12px; z-index:3; }
 
@@ -197,13 +193,11 @@
   <footer>UTC+5 · flexible EU/NA overlap · Roblox & DevForum: NekoPeonie</footer>
 </div>
 
-<!-- ФУЛСКРИН -->
+<!-- ФУЛСКРИН (стрелок больше нет нигде: точки + свайп + клавиатура) -->
 <div class="lb" id="lb" onclick="if(event.target===this)closeLb()">
   <div class="lb-hint">click outside or press Esc to close</div>
   <button class="lb-close" onclick="closeLb()">✕</button>
-  <button class="lb-nav lb-prev" id="lbPrev" onclick="lbMove(-1)">&#8249;</button>
   <img id="lbImg" src="" alt="fullscreen demo" onclick="closeLb()">
-  <button class="lb-nav lb-next" id="lbNext" onclick="lbMove(1)">&#8250;</button>
   <div class="lb-dots" id="lbDots"></div>
 </div>
 
@@ -229,7 +223,6 @@ async function exists(url){
   try{ const r=await fetch(url,{method:'HEAD'}); return r.ok; }
   catch(e){ return false; }
 }
-// Ищет превью: сначала .jpg (легче), потом .png
 async function findPreview(base){
   if(await exists(base+'.jpg')) return base+'.jpg';
   if(await exists(base+'.png')) return base+'.png';
@@ -318,11 +311,8 @@ function openLb(id,idx){
 function renderLb(){
   const st=state[lbId];
   document.getElementById('lbImg').src=st.files[st.current];
-  const many=st.files.length>1;
-  document.getElementById('lbPrev').style.display=many?'block':'none';
-  document.getElementById('lbNext').style.display=many?'block':'none';
   const dots=document.getElementById('lbDots');
-  if(many){
+  if(st.files.length>1){
     let h='';
     st.files.forEach((f,i)=>{ h+='<button class="lb-dot'+(i===st.current?' active':'')+'" onclick="lbGo('+i+')"></button>'; });
     dots.innerHTML=h; dots.style.display='flex';
