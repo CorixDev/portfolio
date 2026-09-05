@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corix — Full-Stack Engineer & UI/UX Architect</title>
+<meta name="description" content="Full-Stack Roblox Engineer & UI/UX Architect. 1M+ visits shipped. Systems that scale, interfaces that convert.">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#16161e; color:#e6e6ea; font-family:'Montserrat',sans-serif; line-height:1.6; }
+  .wrap { max-width:900px; margin:0 auto; padding:24px 20px 64px; }
+  .banner img { width:100%; border-radius:16px; display:block; }
+  .tagline { font-size:clamp(22px,4vw,30px); font-weight:800; color:#fff; margin:36px 0 12px; }
+  .accent { color:#a3e635; }
+  .intro { color:#b9b9c4; max-width:720px; }
+  .hero { margin:28px 0; }
+  .hero img, .card img { width:100%; border-radius:12px; display:block; }
+  .section-title { font-size:20px; font-weight:800; color:#fff; border-left:4px solid #a3e635; padding-left:12px; margin:44px 0 20px; text-transform:uppercase; letter-spacing:2px; }
+  .card { background:#1e1e28; border:1px solid #2b2b39; border-radius:16px; padding:24px; margin-bottom:24px; }
+  .card h3 { color:#fff; font-size:18px; margin-bottom:10px; }
+  .card ul { margin:12px 0 16px 18px; color:#b9b9c4; font-size:15px; }
+  .card li { margin-bottom:6px; }
+  .terms { color:#b9b9c4; font-size:15px; }
+  .terms b { color:#fff; }
+  .contact { text-align:center; margin-top:56px; }
+  .contact p { color:#b9b9c4; margin-bottom:18px; }
+  .discord-tag { display:inline-block; background:#a3e635; color:#16161e; font-weight:800; font-size:20px; padding:16px 36px; border-radius:12px; cursor:pointer; transition:transform .15s ease; user-select:none; }
+  .discord-tag:hover { transform:scale(1.04); }
+  .hint { font-size:13px; color:#6f6f7d; margin-top:10px; }
+  footer { text-align:center; color:#6f6f7d; font-size:13px; margin-top:56px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- БАННЕР: файл banner.png лежит рядом с index.html -->
+  <div class="banner"><img src="banner.png" alt="Corix — Full-Stack Engineering & UI/UX"></div>
+
+  <div class="tagline">Systems that <span class="accent">scale</span>. Interfaces that <span class="accent">convert</span>.</div>
+  <p class="intro">I engineer Roblox experiences end-to-end — from exploit-proof backend architecture to interfaces built to turn players into payers. <b style="color:#fff">1M+ visits shipped.</b> One accountable developer, zero handoff losses, production-grade delivery.</p>
+
+  <!-- HERO-GIF: файл hero.gif -->
+  <div class="hero"><img src="hero.gif" alt="Silk UI — animated badge demo"></div>
+
+  <div class="section-title">Case Studies</div>
+
+  <!-- КЕЙС 1: файл case1.gif -->
+  <div class="card">
+    <h3>"Silk" — Premium UI Framework & Live Leaderboards</h3>
+    <img src="case1.gif" alt="Silk UI demo">
+    <ul>
+      <li>Animated 3D badges + 4-tab Live Leaderboard (Daily / Weekly / Monthly / All-Time) — <b style="color:#fff">UI and backend, 100% solo</b></li>
+      <li>Podium NPC re-skins to the #1 player's avatar in real time</li>
+      <li>Pixel-perfect on every device — mathematical scaling, zero rework</li>
+    </ul>
+  </div>
+
+  <!-- КЕЙС 2: файл case2.gif -->
+  <div class="card">
+    <h3>Avatar Catalog Marketplace</h3>
+    <img src="case2.gif" alt="Catalog demo">
+    <ul>
+      <li>High-concurrency try-on & purchase system</li>
+      <li>PromptBulkPurchase — multi-item checkout in one flow, higher average transaction</li>
+      <li>Exploit-proof data validation — zero trust in client input</li>
+    </ul>
+  </div>
+
+  <!-- КЕЙС 3: файл case3.gif -->
+  <div class="card">
+    <h3>Tycoon Core — Grid Building & State Management</h3>
+    <img src="case3.gif" alt="Tycoon demo">
+    <ul>
+      <li>Real-time placement: collision, rotation, full server-side validation</li>
+      <li>Optimized AI and resource processing — stable 60 FPS at high player counts</li>
+    </ul>
+  </div>
+
+  <div class="section-title">Terms</div>
+  <p class="terms"><b>$30–50/hr</b> by complexity · <b>Fixed price</b> after a scoped brief · 50% upfront or <b>Escrow</b> · Crypto / Robux / Bank Transfer</p>
+
+  <div class="contact">
+    <p>Currently booking — send a one-line idea, get a scoping plan within 24 hours.</p>
+    <div class="discord-tag" onclick="copyTag()" id="tag">corixdev</div>
+    <div class="hint">click to copy · Discord</div>
+  </div>
+
+  <footer>UTC+5 · flexible EU/NA overlap · Roblox & DevForum: NekoPeonie</footer>
+</div>
+
+<script>
+function copyTag(){
+  navigator.clipboard.writeText('corixdev');
+  const t=document.getElementById('tag');
+  t.innerText='Copied!';
+  setTimeout(()=>t.innerText='corixdev',1500);
+}
+</script>
+</body>
+</html>
