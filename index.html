@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#17161b">
 <title>Corix — Full-Stack Engineer & UI/UX Architect</title>
-<meta name="description" content="Full-Stack Roblox Engineer & UI/UX Architect. 1M+ visits shipped. Systems that scale, interfaces that convert.">
+<meta name="description" content="Full-Stack Roblox dev & UI/UX. 1M+ visits shipped. Systems that scale, interfaces that convert.">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
@@ -57,7 +57,7 @@
   .expand-hint { position:absolute; top:10px; right:10px; background:rgba(23,22,27,.7); color:#a3e635; padding:4px 9px; border-radius:8px; font-size:13px; pointer-events:none; opacity:.85; z-index:2; }
   .placeholder { color:#6f6f7d; text-align:center; padding:40px 10px; font-size:14px; }
 
-  /* ═══ ФУЛСКРИН: flex-колонка — точки ВСЕГДА под картинкой, перекрытие невозможно ═══ */
+  /* ═══ ФУЛСКРИН ═══ */
   .lb { position:fixed; inset:0; background:rgba(10,9,13,.96); z-index:100;
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;
     opacity:0; pointer-events:none; transition:opacity .3s ease; }
@@ -96,41 +96,41 @@
   <div class="banner"><img src="banner.jpg" alt="Corix — Full-Stack Engineering & UI/UX"></div>
 
   <div class="tagline">Systems that <span class="accent">scale</span>. Interfaces that <span class="accent">convert</span>.</div>
-  <p class="intro">I engineer Roblox experiences end-to-end — from exploit-proof backend architecture to interfaces built to turn players into payers. <b style="color:#fff">1M+ visits shipped.</b> One accountable developer, zero handoff losses, production-grade delivery.</p>
+  <p class="intro">I build Roblox experiences from backend data all the way to the interface. <b style="color:#fff">1M+ visits shipped.</b> One person owns the whole stack, so nothing gets lost between "the designer" and "the scripter".</p>
 
   <div class="hero" id="heroBox"><div class="skeleton"><div class="spin"></div>Loading demo…</div></div>
 
   <div class="section-title reveal">Core Expertise</div>
   <div class="grid">
     <div class="mini reveal">
-      <h4>🎨 UI/UX Engineering — Signature</h4>
+      <h4>🎨 UI/UX — my main thing</h4>
       <ul>
-        <li>Pixel-perfect adaptive UI — mathematical scaling (UDim2), flawless on every device</li>
-        <li>Procedural animation, dynamic gradients, particles, Z-index layering</li>
-        <li>Custom ViewportFrame rendering: 3D previews, animated badges</li>
+        <li>Interfaces that fit every screen. Scaling is done with math (UDim2 constants), not guesswork.</li>
+        <li>Tween animation, dynamic gradients, particles, layered Z-index work.</li>
+        <li>Custom ViewportFrame rendering: 3D previews, animated badges, live characters.</li>
       </ul>
     </div>
     <div class="mini reveal">
       <h4>⚙️ Luau Architecture</h4>
       <ul>
-        <li>OOP, modular frameworks, custom state machines</li>
-        <li>Grid building, inventories, tabbed live leaderboards, avatar editors</li>
-        <li>Custom Studio plugins for workflow automation</li>
+        <li>OOP, modular frameworks, custom state machines.</li>
+        <li>Grid building, inventories, tabbed live leaderboards, avatar editors.</li>
+        <li>Custom Studio plugins that automate the boring parts of the workflow.</li>
       </ul>
     </div>
     <div class="mini reveal">
       <h4>🔒 Data & Monetization</h4>
       <ul>
-        <li>ProfileService pipelines with strict server-side validation</li>
-        <li>MarketplaceService, Bulk Purchase flows, funnels built around ARPPU</li>
-        <li>Anti-exploit architecture, memory-leak elimination, high-CCU optimization</li>
+        <li>Saving built on ProfileService with strict server-side checks.</li>
+        <li>Monetization flows (MarketplaceService, Bulk Purchase) made to raise average spend, not just to exist.</li>
+        <li>Server hardening: anti-exploit rules, memory leak hunting, high-CCU profiling.</li>
       </ul>
     </div>
     <div class="mini reveal">
       <h4>🐍 External Tooling</h4>
       <ul>
-        <li>Python: data processing, task automation, webhooks & API integrations</li>
-        <li>Rapid prototyping with production-grade turnaround</li>
+        <li>Python for data processing, automation, custom webhooks and API hooks.</li>
+        <li>Fast prototyping when you want to see an idea working before committing.</li>
       </ul>
     </div>
   </div>
@@ -138,13 +138,13 @@
   <div class="section-title reveal">Case Studies</div>
 
   <div class="card reveal">
-    <h3>"Silk" — Premium UI Framework, Animated Badges & Live Leaderboards</h3>
+    <h3>"Silk" — UI Framework & Live Leaderboards</h3>
     <div id="slider1"><div class="skeleton"><div class="spin"></div>Loading demo…</div></div>
     <ul>
-      <li>Animated 3D badges + 4-tab Live Leaderboard (Daily / Weekly / Monthly / All-Time) — <b style="color:#fff">UI and backend, 100% solo</b></li>
-      <li>Podium NPC re-skins to the #1 player's avatar in real time — a competition loop that drives session time and spending</li>
-      <li>Time-windowed data pipelines with automatic period resets</li>
-      <li>Pixel-perfect on every device — mathematical scaling, zero rework</li>
+      <li>Animated 3D badges + a 4-tab live leaderboard (Daily / Weekly / Monthly / All-Time). <b style="color:#fff">UI and backend, 100% solo.</b></li>
+      <li>The podium NPC copies the #1 player's avatar and swaps live when someone switches tabs. The fight for that spot does wonders for playtime.</li>
+      <li>Each tab runs on its own data pipeline and resets on schedule.</li>
+      <li>One layout fits every device. Math, not manual patching.</li>
     </ul>
   </div>
 
@@ -152,40 +152,41 @@
     <h3>Avatar Catalog Marketplace</h3>
     <div id="slider2"><div class="skeleton"><div class="spin"></div>Loading demo…</div></div>
     <ul>
-      <li>High-concurrency try-on & purchase system</li>
-      <li>PromptBulkPurchase — multi-item checkout in one flow, higher average transaction</li>
-      <li>Custom HumanoidDescription pipeline with instant ViewportFrame rendering</li>
-      <li>Exploit-proof data validation — zero trust in client input</li>
+      <li>A catalog system I built for high-traffic games.</li>
+      <li>Bulk purchase via PromptBulkPurchase: players buy a whole outfit in one checkout instead of clicking items one by one.</li>
+      <li>Custom HumanoidDescription pipeline with instant ViewportFrame previews.</li>
+      <li>Validation and saving are fully server-side. No lost purchases, nothing for exploiters to grab.</li>
     </ul>
   </div>
 
   <div class="card reveal">
-    <h3>Tycoon Core — Grid Building & State Management</h3>
+    <h3>Tycoon Core: Grid Building</h3>
     <div id="slider3"><div class="skeleton"><div class="spin"></div>Loading demo…</div></div>
     <ul>
-      <li>Real-time placement: collision, rotation, full server-side validation</li>
-      <li>Optimized customer AI and resource processing — stable 60 FPS at high player counts</li>
-      <li>Modular, documented codebase built for long-term maintenance</li>
+      <li>A tycoon core I wrote from scratch.</li>
+      <li>Grid placement with collision and rotation, every placement re-checked on the server.</li>
+      <li>Customer AI and resource processing tuned to hold 60 FPS even when the server is packed.</li>
+      <li>Modular, documented code. Whoever maintains it after me won't curse my name.</li>
     </ul>
   </div>
 
   <div class="section-title reveal">What You Get</div>
   <div class="card reveal">
     <ul>
-      <li><b style="color:#fff">Full-Stack Game Architecture</b> — database → gameplay → UI, one accountable engineer</li>
-      <li><b style="color:#fff">Premium UI/UX Engineering</b> — design, scripting, animation of adaptive interfaces</li>
-      <li><b style="color:#fff">Custom Systems</b> — inventories, shops, tycoon mechanics, data pipelines</li>
-      <li><b style="color:#fff">Performance & Security Audits</b> — profiling, memory-leak fixes, anti-exploit hardening</li>
-      <li><b style="color:#fff">External Automation</b> — Python bots, API/webhooks, Studio plugins</li>
-      <li>Private case studies available on request (NDA-safe)</li>
+      <li><b style="color:#fff">Full-stack builds</b> — database, gameplay, UI from one person. No designer/scripter telephone game.</li>
+      <li><b style="color:#fff">UI/UX work</b> — designing, scripting and animating interfaces that fit every screen.</li>
+      <li><b style="color:#fff">Custom systems</b> — inventories, shops, tycoon mechanics, data pipelines.</li>
+      <li><b style="color:#fff">Fixes & audits</b> — profiling, memory leaks, exploit holes.</li>
+      <li><b style="color:#fff">External stuff</b> — Python bots, webhooks, Studio plugins.</li>
+      <li>More private work samples available on request (some under NDA).</li>
     </ul>
   </div>
 
   <div class="section-title reveal">Terms</div>
-  <p class="terms reveal"><b>$30–50/hr</b> by complexity · <b>Fixed price</b> after a scoped brief · 50% upfront or <b>Escrow</b> · Crypto / Robux / Bank Transfer</p>
+  <p class="terms reveal"><b>$30–50/hr</b> depending on complexity · <b>Fixed price</b> after a quick brief (you see the price before paying anything) · 50% upfront or <b>escrow</b> · Crypto / Robux / Bank Transfer</p>
 
   <div class="contact reveal">
-    <p>Currently booking — send a one-line idea, get a scoping plan within 24 hours.</p>
+    <p>Currently booking. Send a one-line idea and I'll come back with a plan and a timeline within 24 hours.</p>
     <div class="discord-tag" onclick="copyTag()" id="tag">corixdev</div>
     <div class="hint">click to copy · Discord</div>
   </div>
@@ -193,7 +194,7 @@
   <footer>UTC+5 · flexible EU/NA overlap · Roblox & DevForum: NekoPeonie</footer>
 </div>
 
-<!-- ФУЛСКРИН (стрелок больше нет нигде: точки + свайп + клавиатура) -->
+<!-- ФУЛСКРИН (точки + свайп + клавиатура, без стрелок) -->
 <div class="lb" id="lb" onclick="if(event.target===this)closeLb()">
   <div class="lb-hint">click outside or press Esc to close</div>
   <button class="lb-close" onclick="closeLb()">✕</button>
