@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#17161b">
 <title>Corix — Full-Stack Engineer & UI/UX Architect</title>
 <meta name="description" content="Full-Stack Roblox Engineer & UI/UX Architect. 1M+ visits shipped. Systems that scale, interfaces that convert.">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
@@ -28,15 +29,35 @@
   .card h3 { color:#fff; font-size:18px; margin-bottom:12px; }
   .card ul { margin:12px 0 4px 18px; color:#b9b9c4; font-size:15px; }
   .card li { margin-bottom:6px; }
+
+  /* ═══ СЛАЙДЕР ═══ */
   .slider { position:relative; overflow:hidden; border-radius:12px; margin-bottom:14px; background:#100f14; }
   .slides { display:flex; transition:transform .45s ease; }
   .slide { min-width:100%; }
-  .slide img { width:100%; display:block; }
-  .nav { position:absolute; top:50%; transform:translateY(-50%); background:rgba(23,22,27,.75); color:#a3e635; border:none; font-size:28px; width:44px; height:44px; border-radius:50%; cursor:pointer; line-height:1; }
+  .slide img { width:100%; display:block; opacity:0; transition:opacity .4s ease; }
+  .slide img.on { opacity:1; }
+  .skeleton { aspect-ratio:16/9; display:flex; flex-direction:column; gap:12px; align-items:center; justify-content:center;
+    background:linear-gradient(100deg,#100f14 40%,#1c1a22 50%,#100f14 60%); background-size:200% 100%;
+    animation:shimmer 1.4s infinite linear; border-radius:12px; color:#6f6f7d; font-size:13px; }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  .spin { width:26px; height:26px; border:3px solid #33313b; border-top-color:#a3e635; border-radius:50%; animation:rot 1s linear infinite; }
+  @keyframes rot { to{transform:rotate(360deg)} }
+  .nav { position:absolute; top:50%; transform:translateY(-50%); background:rgba(23,22,27,.75); color:#a3e635; border:none; font-size:28px; width:44px; height:44px; border-radius:50%; cursor:pointer; line-height:1; z-index:2; }
   .nav:hover { background:rgba(23,22,27,.95); }
   .prev { left:10px; } .next { right:10px; }
-  .counter { position:absolute; bottom:10px; right:12px; background:rgba(23,22,27,.85); color:#fff; font-size:12px; padding:4px 10px; border-radius:20px; }
+  @media (hover:none), (pointer:coarse) { .nav { display:none; } } /* на телефонах стрелки прячем */
+  .dots { position:absolute; bottom:12px; left:50%; transform:translateX(-50%); display:flex; gap:7px; z-index:2; }
+  .dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,.35); border:none; cursor:pointer; padding:0; transition:background .2s, transform .2s; }
+  .dot.active { background:#a3e635; transform:scale(1.3); }
   .placeholder { color:#6f6f7d; text-align:center; padding:40px 10px; font-size:14px; }
+
+  /* ═══ ПЛАШКА ЗАГРУЗКИ ═══ */
+  .pill { position:fixed; left:50%; transform:translateX(-50%); bottom:18px; background:#211f26; border:1px solid #33313b;
+    color:#e6e6ea; padding:10px 18px; border-radius:30px; font-size:13px; z-index:99;
+    box-shadow:0 4px 20px rgba(0,0,0,.45); transition:opacity .5s ease; min-width:200px; text-align:center; }
+  .pill.hidden { opacity:0; pointer-events:none; }
+  .pill .bar { height:3px; background:#a3e635; border-radius:2px; margin-top:7px; width:0%; transition:width .35s ease; }
+
   .terms { color:#b9b9c4; font-size:15px; }
   .terms b { color:#fff; }
   .contact { text-align:center; margin-top:56px; }
@@ -57,10 +78,10 @@
   <div class="tagline">Systems that <span class="accent">scale</span>. Interfaces that <span class="accent">convert</span>.</div>
   <p class="intro">I engineer Roblox experiences end-to-end — from exploit-proof backend architecture to interfaces built to turn players into payers. <b style="color:#fff">1M+ visits shipped.</b> One accountable developer, zero handoff losses, production-grade delivery.</p>
 
-  <!-- HERO: один файл hero.gif в корне -->
-  <div class="hero"><img src="hero.gif" alt="Silk UI — animated badge demo" onerror="this.parentElement.style.display='none'"></div>
+  <!-- HERO -->
+  <div class="hero" id="heroBox"><div class="skeleton"><div class="spin"></div>Loading demo…</div></div>
 
-  <!-- ═══════ ЭКСПЕРТИЗА ═══════ -->
+  <!-- ЭКСПЕРТИЗА -->
   <div class="section-title reveal">Core Expertise</div>
   <div class="grid">
     <div class="mini reveal">
@@ -96,12 +117,12 @@
     </div>
   </div>
 
-  <!-- ═══════ КЕЙСЫ ═══════ -->
+  <!-- КЕЙСЫ -->
   <div class="section-title reveal">Case Studies</div>
 
   <div class="card reveal">
     <h3>"Silk" — Premium UI Framework, Animated Badges & Live Leaderboards</h3>
-    <div id="slider1"></div>
+    <div id="slider1"><div class="skeleton"><div class="spin"></div>Loading demo…</div></div>
     <ul>
       <li>Animated 3D badges + 4-tab Live Leaderboard (Daily / Weekly / Monthly / All-Time) — <b style="color:#fff">UI and backend, 100% solo</b></li>
       <li>Podium NPC re-skins to the #1 player's avatar in real time — a competition loop that drives session time and spending</li>
@@ -112,7 +133,7 @@
 
   <div class="card reveal">
     <h3>Avatar Catalog Marketplace</h3>
-    <div id="slider2"></div>
+    <div id="slider2"><div class="skeleton"><div class="spin"></div>Loading demo…</div></div>
     <ul>
       <li>High-concurrency try-on & purchase system</li>
       <li>PromptBulkPurchase — multi-item checkout in one flow, higher average transaction</li>
@@ -123,7 +144,7 @@
 
   <div class="card reveal">
     <h3>Tycoon Core — Grid Building & State Management</h3>
-    <div id="slider3"></div>
+    <div id="slider3"><div class="skeleton"><div class="spin"></div>Loading demo…</div></div>
     <ul>
       <li>Real-time placement: collision, rotation, full server-side validation</li>
       <li>Optimized customer AI and resource processing — stable 60 FPS at high player counts</li>
@@ -131,7 +152,7 @@
     </ul>
   </div>
 
-  <!-- ═══════ УСЛУГИ ═══════ -->
+  <!-- УСЛУГИ -->
   <div class="section-title reveal">What You Get</div>
   <div class="card reveal">
     <ul>
@@ -156,8 +177,11 @@
   <footer>UTC+5 · flexible EU/NA overlap · Roblox & DevForum: NekoPeonie</footer>
 </div>
 
+<!-- ПЛАШКА ПРОГРЕССА -->
+<div class="pill hidden" id="pill"><span id="pillText">Loading demos…</span><div class="bar" id="pillBar"></div></div>
+
 <script>
-// ═══ Копирование Discord ═══
+// ═══ Discord ═══
 function copyTag(){
   navigator.clipboard.writeText('corixdev');
   const t=document.getElementById('tag');
@@ -165,54 +189,135 @@ function copyTag(){
   setTimeout(()=>t.innerText='corixdev',1500);
 }
 
-// ═══ АВТО-СЛАЙДЕР: сам находит 1.gif, 2.gif... в папке кейса ═══
-function buildSlider(elId, folder, max){
-  const container=document.getElementById(elId);
-  const probes=[];
-  for(let i=1;i<=max;i++){
-    probes.push(new Promise(res=>{
-      const img=new Image();
-      img.onload=()=>res({i,ok:true});
-      img.onerror=()=>res({i,ok:false});
-      img.src=folder+'/'+i+'.gif';
-    }));
-  }
-  Promise.all(probes).then(results=>{
-    const ok=results.filter(r=>r.ok).sort((a,b)=>a.i-b.i);
-    if(ok.length===0){ container.innerHTML='<div class="placeholder">Demo GIFs coming soon</div>'; return; }
-    let html='<div class="slides">';
-    ok.forEach(r=>{ html+='<div class="slide"><img src="'+folder+'/'+r.i+'.gif" alt="demo"></div>'; });
-    html+='</div>';
-    if(ok.length>1){
-      html+='<button class="nav prev" onclick="moveSlide(\''+elId+'\',-1)">&#8249;</button>';
-      html+='<button class="nav next" onclick="moveSlide(\''+elId+'\',1)">&#8250;</button>';
-      html+='<div class="counter" id="'+elId+'-counter">1 / '+ok.length+'</div>';
-    }
-    container.classList.add('slider');
-    container.innerHTML=html;
-    container.dataset.index=0;
-    container.dataset.count=ok.length;
-    let startX=0;
-    container.addEventListener('touchstart',e=>startX=e.touches[0].clientX,{passive:true});
-    container.addEventListener('touchend',e=>{
-      const dx=e.changedTouches[0].clientX-startX;
-      if(Math.abs(dx)>40) moveSlide(elId, dx<0?1:-1);
-    },{passive:true});
+// ═══ ДВИЖОК ЗАГРУЗКИ ═══
+const CASES=[{id:'slider1',folder:'case1'},{id:'slider2',folder:'case2'},{id:'slider3',folder:'case3'}];
+const MAX=10;
+const state={}; // sliderId -> {files:[], current:0}
+let totalFound=0, totalLoaded=0;
+
+async function exists(url){
+  try{ const r=await fetch(url,{method:'HEAD'}); return r.ok; }
+  catch(e){ return false; }
+}
+
+function loadImg(src){
+  return new Promise(res=>{
+    const img=new Image();
+    img.onload=()=>res({src,ok:true});
+    img.onerror=()=>res({src,ok:false});
+    img.src=src;
   });
 }
-function moveSlide(elId,dir){
-  const c=document.getElementById(elId);
-  const count=+c.dataset.count; let idx=+c.dataset.index;
-  idx=(idx+dir+count)%count; c.dataset.index=idx;
-  c.querySelector('.slides').style.transform='translateX(-'+(idx*100)+'%)';
-  const counter=document.getElementById(elId+'-counter');
-  if(counter) counter.textContent=(idx+1)+' / '+count;
-}
-buildSlider('slider1','case1',10);
-buildSlider('slider2','case2',10);
-buildSlider('slider3','case3',10);
 
-// ═══ Плавное появление при скролле ═══
+function updatePill(){
+  const pill=document.getElementById('pill');
+  const txt=document.getElementById('pillText');
+  const bar=document.getElementById('pillBar');
+  if(totalFound===0){ pill.classList.add('hidden'); return; }
+  pill.classList.remove('hidden');
+  if(totalLoaded<totalFound){
+    txt.textContent='⏳ Loading demos '+totalLoaded+' / '+totalFound+'…';
+    bar.style.width=(totalLoaded/totalFound*100)+'%';
+  } else {
+    txt.textContent='✓ All demos loaded';
+    bar.style.width='100%';
+    setTimeout(()=>pill.classList.add('hidden'),2000);
+  }
+}
+
+function renderSlider(id){
+  const c=document.getElementById(id);
+  const st=state[id];
+  if(!st || st.files.length===0) return;
+  let html='<div class="slides">';
+  st.files.forEach(f=>{ html+='<div class="slide"><img src="'+f+'" alt="demo" onload="this.classList.add(\'on\')"></div>'; });
+  html+='</div>';
+  if(st.files.length>1){
+    html+='<button class="nav prev" onclick="moveSlide(\''+id+'\',-1)">&#8249;</button>';
+    html+='<button class="nav next" onclick="moveSlide(\''+id+'\',1)">&#8250;</button>';
+    html+='<div class="dots">';
+    st.files.forEach((f,i)=>{ html+='<button class="dot'+(i===st.current?' active':'')+'" onclick="goTo(\''+id+'\','+i+')"></button>'; });
+    html+='</div>';
+  }
+  c.innerHTML=html;
+  c.classList.add('slider');
+  applyTransform(id);
+  // свайп
+  if(!c.dataset.touch){
+    c.dataset.touch='1';
+    let sx=0;
+    c.addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});
+    c.addEventListener('touchend',e=>{
+      const dx=e.changedTouches[0].clientX-sx;
+      if(Math.abs(dx)>40) moveSlide(id, dx<0?1:-1);
+    },{passive:true});
+  }
+}
+
+function applyTransform(id){
+  const c=document.getElementById(id);
+  const st=state[id];
+  const slides=c.querySelector('.slides');
+  if(slides) slides.style.transform='translateX(-'+(st.current*100)+'%)';
+  c.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===st.current));
+}
+function moveSlide(id,dir){
+  const st=state[id]; if(!st||st.files.length<2) return;
+  st.current=(st.current+dir+st.files.length)%st.files.length;
+  applyTransform(id);
+}
+function goTo(id,idx){
+  const st=state[id]; if(!st) return;
+  st.current=idx; applyTransform(id);
+}
+
+async function boot(){
+  // 1) Разведка: узнаём, какие гифки существуют (HEAD-запросы, ничего не скачиваем)
+  const queue=[];
+  if(await exists('hero.gif')) queue.push({type:'hero',src:'hero.gif'});
+  const found={};
+  for(const c of CASES){
+    found[c.id]=[];
+    for(let i=1;i<=MAX;i++){
+      if(await exists(c.folder+'/'+i+'.gif')) found[c.id].push(i);
+      else break; // нумерация должна быть сплошной: 1,2,3...
+    }
+    state[c.id]={files:[],current:0};
+    if(found[c.id].length===0){
+      document.getElementById(c.id).innerHTML='<div class="placeholder">Demo GIFs coming soon</div>';
+    }
+  }
+  // 2) Очередь: сначала hero, потом по кругу — 1-я гифка каждого кейса, 2-я, 3-я...
+  for(let round=1;round<=MAX;round++){
+    for(const c of CASES){
+      if(found[c.id].includes(round)) queue.push({type:'slide',id:c.id,src:c.folder+'/'+round+'.gif'});
+    }
+  }
+  totalFound=queue.length;
+  if(totalFound===0){ document.getElementById('heroBox').style.display='none'; return; }
+  updatePill();
+
+  // 3) Грузим строго по очереди — одну за одной (бережём слабый интернет)
+  for(const item of queue){
+    const r=await loadImg(item.src);
+    if(r.ok){
+      if(item.type==='hero'){
+        document.getElementById('heroBox').innerHTML='<img src="'+item.src+'" alt="Hero demo" onload="this.style.opacity=1" style="opacity:0;transition:opacity .4s ease;width:100%;border-radius:12px;display:block;">';
+      } else {
+        state[item.id].files.push(item.src);
+        renderSlider(item.id);
+      }
+    }
+    totalLoaded++; updatePill();
+  }
+  // если hero так и не загрузился — прячем блок
+  if(!document.getElementById('heroBox').querySelector('img')){
+    document.getElementById('heroBox').style.display='none';
+  }
+}
+boot();
+
+// ═══ Появление при скролле ═══
 const io=new IntersectionObserver(es=>es.forEach(e=>{
   if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); }
 }),{threshold:.1});
